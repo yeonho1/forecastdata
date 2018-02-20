@@ -2,6 +2,8 @@ from urllib2 import Request, urlopen
 from urllib import urlencode, quote_plus
 from cgi import parse_qs, escape
 import json
+#import socket
+#from wsgiref.simple_server import make_server
 
 SERVICE_KEY = 'YOURKEYHERE'
 def application(environ, start_response):
@@ -23,7 +25,7 @@ def application(environ, start_response):
             quote_plus('base_time'): time,
             quote_plus('nx'): nx,
             quote_plus('ny'): ny,
-            quote_plus('numOfRows') : '10',
+            quote_plus('numOfRows') : '184',
             quote_plus('pageNo') : '1',
             quote_plus('startPage') : '1',
             quote_plus('_type'): 'json'
@@ -38,24 +40,32 @@ def application(environ, start_response):
     humidity = None
     lowest = None
     highest = None
+    rain_time = ()
+    humidity_time = ()
+    lowest_time = ()
+    highest_time = ()
     try:
         items = jsonloads['response']['body']['items']['item']
     except KeyError:
-        out = "{'msg':'Incorrect Request'}"
+        out = "{'msg':'error'}"
         response_body = json.dumps(out)
         response_header = [('Content-Type','text/json'),('Content-Length',str(len(response_body)))]
         start_response('200 OK', response_header)
         return [response_body]
     for item in items:
-        if item['category']=='POP':
+        if item['category']=='POP': 
+            rain_time = getTime(item)
             rain = item['fcstValue']
         elif item['category']=='REH':
+            humidity_time = getTime(item)
             humidity = item['fcstValue']
         elif item['category']=='TMN':
+            lowest_time = getTime(item)
             lowest = item['fcstValue']
         elif item['category']=='TMX':
+            highest_time = getTime(item)
             highest = item['fcstValue']
-    out = {'rain':rain,'humidity':humidity,'lowest':lowest,'highest':highest}
+    out = {'rain':{'time':rain_time,'value':rain},'humidity':{'time':humidity_time,'value':humidity},'lowest':{'time':lowest_time,'value':lowest},'highest':{'time':highest_time,'value':highest}}
     response_body = json.dumps(out)
     status = '200 OK'
     response_headers = [
@@ -65,3 +75,9 @@ def application(environ, start_response):
     
     start_response(status, response_headers)
     return [response_body]
+
+def getTime(item):
+    return [item['baseDate'], item['baseTime']]
+
+#httpd = make_server(socket.gethostbyname(socket.gethostname()),8051,application)
+#httpd.serve_forever()
