@@ -77,7 +77,7 @@ def application(environ, start_response):
     return [response_body]
 
 def getTime(item):
-    return [item['baseDate'], item['baseTime']]
+    return [item['fcstDate'], item['fcstTime']]
 
 #httpd = make_server(socket.gethostbyname(socket.gethostname()),8051,application)
 #httpd.serve_forever()
