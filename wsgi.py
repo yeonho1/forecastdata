@@ -3,7 +3,7 @@ from urllib import urlencode, quote_plus
 from cgi import parse_qs, escape
 import json
 
-SERVICE_KEY = 'RMZ2otg8%2BEPXaycOy9I%2Bo9Eyt4AHr%2FGewFEMubMboOCCiLZTGPY9gSya7C1HrqRoS0Ozm59BJEdcFgMrGYWABA%3D%3D' # Public API Key
+SERVICE_KEY = 'YOURKEYHERE'
 def application(environ, start_response):
     d = parse_qs(environ['QUERY_STRING'])
     
