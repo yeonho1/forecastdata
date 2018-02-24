@@ -25,11 +25,11 @@ WSGIScriptAlias /fcst/access /usr/local/forecastdata/forecastdata/wsgi.py
 WSGIScriptAlias /fcst/available /usr/local/forecastdata/forecastdata/wsgi2.py
 WSGIScriptAlias /fcst/available2 /usr/local/forecastdata/forecastdata/wsgi2_an.py
 ```
-
-##wsgi2_an.py
+	
+## wsgi2_an.py
 **wsgi2_an.py**는 다른 방법으로 현재 시간에서 가장 가까운 발표시각을 찾아 그 발표시각에서 찾을 수 있는 예보의 시간을 리턴합니다.
 
-##테스트 할 때
+## 테스트 할 때
 테스트할 때에는 (아파치 사용시 a가 wsgi.py에 원하는주소이고 b가 wsgi2.py에 원하는주소라고 가정합니다.)  
  - 아파치(또는 다른 daemon)에 연동시켰을 경우 : 서버IP/a또는b
  - 그냥 .py로 돌렸을 경우 : 서버IP:8051  
@@ -43,7 +43,7 @@ import json
 import socket
 from wsgiref.simple_server import make_server
 ``` 
-###wsgi.py의 뒷부분
+### wsgi.py의 뒷부분
 ```python
 httpd = make_server(socket.gethostbyname(socket.gethostname()),
 8051,application)
@@ -51,7 +51,7 @@ httpd = make_server(socket.gethostbyname(socket.gethostname()),
 httpd.serve_forever()
 ```
 
-###wsgi2.py의 앞부분
+### wsgi2.py의 앞부분
 ```python
 from datetime import datetime
 import json
@@ -59,14 +59,14 @@ import socket
 from wsgiref.simple_server import make_server
 import time
 ```
-###wsgi2.py의 뒷부분
+### wsgi2.py의 뒷부분
 ```python
 httpd = make_server(socket.gethostbyname(socket.gethostname()),8051,application)
 httpd.serve_forever()
 ```
 
 **유의사항(.py 사용할 경우 해당)**: **/etc/hosts**가 127.0.0.1일 경우 socket.gethostbyname())이 작동하지 않습니다. ifconfig를 사용하여 IP 를 알아내 스트링으로 적어주세요. (아래 예시)
-###예시
+### 예시
 ```python
 httpd = make_server('192.168.0.2',8051,application)
 httpd.serve_forever()
