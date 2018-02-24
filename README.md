@@ -10,20 +10,31 @@
 **wsgi2.py**는 현재 시간을 이용해 사용자가 [**wsgi.py**] (##wsgi.py) 파일에 요청에 얻을 수 있는 기상정보의 발표시간을 알아내 응답을 하는 코드입니다.
 
 **유의사항**: 파이썬 3로 실행시 모듈 에러가 발생할 수 있으니 파이썬 2로 실행해 주시고 아파치(Apache) 서버에 연동할 경우에는 **/etc/httpd/conf.d/** 디렉토리 안에 **원하는 이름.conf** 파일을 만들고 다음과 같이 입력해 주시면 됩니다.
-###아파치 연동할 때의 .conf
+
+### 아파치 연동할 때의 .conf
 ```
 WSGIScriptAlias /<wsgi.py에 원하는주소> /github clone한 디렉토리/wsgi.py
-WSGIScriptAlias /<wsgi2.py에 원하는주소> /github clone한 디렉토리/wsgi2.py  
+WSGIScriptAlias /<wsgi2.py에 원하는주소> /github clone한 디렉토리/wsgi2.py 
+WSGIScriptAlias /<wsgi2_an.py에 원하는주소> /github clone한 디렉토리/wsgi2_an.py 
 ```
-**다음은 .conf 파일의 예시입니다.**
-![예시](https://preview.ibb.co/nA413H/Ex1.png)
+**다음은 .conf 파일의 *예시* 입니다.**
+![Imgur](https://i.imgur.com/FahtKMK.png)
+
+```
+WSGIScriptAlias /fcst/access /usr/local/forecastdata/forecastdata/wsgi.py
+WSGIScriptAlias /fcst/available /usr/local/forecastdata/forecastdata/wsgi2.py
+WSGIScriptAlias /fcst/available2 /usr/local/forecastdata/forecastdata/wsgi2_an.py
+```
+
+##wsgi2_an.py
+**wsgi2_an.py**는 다른 방법으로 현재 시간에서 가장 가까운 발표시각을 찾아 그 발표시각에서 찾을 수 있는 예보의 시간을 리턴합니다.
 
 ##테스트 할 때
 테스트할 때에는 (아파치 사용시 a가 wsgi.py에 원하는주소이고 b가 wsgi2.py에 원하는주소라고 가정합니다.)  
  - 아파치(또는 다른 daemon)에 연동시켰을 경우 : 서버IP/a또는b
  - 그냥 .py로 돌렸을 경우 : 서버IP:8051  
- **유의사항**: 그냥 .py를 ```python wsgi.py```로 돌렸을 때에는 한번에 한가지 요청 밖에 받을 수 없기 때문에 실제로 사용할 때에는 [***아파치에 연동***] (###아파치 연동할 때의 .conf)을 사용하는 것을 추천합니다. 그리고 .py를 사용할 때에는 앞부분과 뒷부분을 조금 수정해 주어야 하는데, 다음과 같이 수정해 주시면 됩니다.
-###wsgi.py의 앞부분
+ **유의사항**: 그냥 .py를 ```python wsgi.py```로 돌렸을 때에는 한번에 한가지 요청 밖에 받을 수 없기 때문에 실제로 사용할 때에는 [***아파치에 연동***] (###아파치 연동할 때의 .conf)해 사용하는 것을 추천합니다. 그리고 .py를 사용할 때에는 앞부분과 뒷부분을 조금 수정해 주어야 하는데, 다음과 같이 수정해 주시면 됩니다.
+### wsgi.py의 앞부분
 ```python
 from urllib2 import Request, urlopen
 from urllib import urlencode, quote_plus

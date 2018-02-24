@@ -6,7 +6,7 @@ import json
 #from wsgiref.simple_server import make_server
 #import socket
 
-SERVICE_KEY = 'YOURKEYHERE'
+SERVICE_KEY = 'RMZ2otg8%2BEPXaycOy9I%2Bo9Eyt4AHr%2FGewFEMubMboOCCiLZTGPY9gSya7C1HrqRoS0Ozm59BJEdcFgMrGYWABA%3D%3D'
 def application(environ, start_response):
     date = datetime.strftime('%Y%m%d')
     times = ['02','05','08','11','14','17','20','23']
@@ -48,7 +48,8 @@ def application(environ, start_response):
             pass
         elif (x['fcstDate'],x['fcstTime']) not in avtimes:
             avtimes.append((x['fcstDate'],x['fcstTime']))
-    response_body = json.dumps(avtimes)
+    avtimes2 = [{'date':x[0],'time':x[1]} for x in avtimes]
+    response_body = json.dumps(avtimes2)
     response_header = [('Content-Type','text/json'),('Content-Length',str(len(response_body)))]
     start_response('200 OK', response_header)
     return [response_body]

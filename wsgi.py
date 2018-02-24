@@ -5,7 +5,7 @@ import json
 #import socket
 #from wsgiref.simple_server import make_server
 
-SERVICE_KEY = 'YOURKEYHERE'
+SERVICE_KEY = 'RMZ2otg8%2BEPXaycOy9I%2Bo9Eyt4AHr%2FGewFEMubMboOCCiLZTGPY9gSya7C1HrqRoS0Ozm59BJEdcFgMrGYWABA%3D%3D'
 def application(environ, start_response):
     d = parse_qs(environ['QUERY_STRING'])
     
