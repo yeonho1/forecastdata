@@ -36,36 +36,32 @@ def application(environ, start_response):
     response = urlopen(request).read()
     jsonloads = json.loads(response)
     
-    rain = None
-    humidity = None
-    lowest = None
-    highest = None
-    rain_time = ()
-    humidity_time = ()
-    lowest_time = ()
-    highest_time = ()
+    rain_time = []
+    humidity_time = []
+    lowest_time = []
+    highest_time = []
     try:
         items = jsonloads['response']['body']['items']['item']
     except KeyError:
-        out = "{'msg':'error'}"
+        out = {'msg':'error'}
         response_body = json.dumps(out)
         response_header = [('Content-Type','text/json'),('Content-Length',str(len(response_body)))]
         start_response('200 OK', response_header)
         return [response_body]
+    out = {'rain':[],'humidity':[],'lowest':[],'highest':[]}
     for item in items:
         if item['category']=='POP': 
             rain_time = getTime(item)
-            rain = item['fcstValue']
+            out['rain'].append({'date':rain_time[0],'time':rain_time[1],'value':item['fcstValue']})
         elif item['category']=='REH':
             humidity_time = getTime(item)
-            humidity = item['fcstValue']
+            out['humidity'].append({'date':humidity_time[0],'time':humidity_time[1],'value':item['fcstValue']})
         elif item['category']=='TMN':
             lowest_time = getTime(item)
-            lowest = item['fcstValue']
+            out['lowest'].append({'date':lowest_time[0],'time':lowest_time[1],'value':item['fcstValue']})
         elif item['category']=='TMX':
             highest_time = getTime(item)
-            highest = item['fcstValue']
-    out = {'rain':{'time':rain_time,'value':rain},'humidity':{'time':humidity_time,'value':humidity},'lowest':{'time':lowest_time,'value':lowest},'highest':{'time':highest_time,'value':highest}}
+            out['rain'].append({'date':highest_time[0],'time':highest_time[1],'value':item['fcstValue']})
     response_body = json.dumps(out)
     status = '200 OK'
     response_headers = [
