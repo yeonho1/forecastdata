@@ -1,0 +1,21 @@
+<html>
+<head>
+<script src="jquery-3.3.1.min.js"></script>
+<script>
+$(document).ready(function() {
+	$.ajax({url:"13.125.169.136/fcst/available2",success:function(data) {
+		var text = ""
+		for(i=0; i<data.length; i++) {
+			text += "<option value=" + data[i].date + data[i].time + ">" + data[i].date.slice(0,5) + "년" + data[i].date.slice(5,7) + "월" + data[i].date.slice(7,9) + "일" + data[i].time.slice(0,2) + "시" + "</option>"
+		}
+	}});
+});
+</script>
+</head>
+<body>
+<select id="canaccess">
+
+</select>
+<input type="button" id="gets" value="정보 가져오기">
+</body>
+</html>
